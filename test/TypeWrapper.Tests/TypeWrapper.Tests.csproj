@@ -17,8 +17,4 @@
     <ProjectReference Include="..\..\src\TypeWrapper\TypeWrapper.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mocks\" />
-  </ItemGroup>
-
 </Project>
