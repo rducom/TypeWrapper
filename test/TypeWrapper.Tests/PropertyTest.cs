@@ -33,6 +33,37 @@ namespace TypeWrapper.Tests
             AssertUserIsFine(wrapped, out Type wrappedType);
         }
 
+        [Fact]
+        public void ThrowsOnNullInstance()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Wrap.Type<User>().Instance(null);
+            }); 
+        }
+
+        [Fact]
+        public void ThrowsOnNullDelegate()
+        {
+            Func<User, string> func = null;
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Wrap.Type<User>()
+                    .WithProperty("Null", func);
+            });
+        }
+
+        [Fact]
+        public void ThrowsOnEmptyProperty()
+        {
+            Func<User, string> func = i => i.Kind;
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Wrap.Type<User>()
+                    .WithProperty("  ", func);
+            });
+        }
+
         private void AssertUserIsFine(Wrapped<User> wrapped, out Type wrappedType)
         {
             wrappedType = wrapped.GetType();
@@ -45,10 +76,5 @@ namespace TypeWrapper.Tests
             Assert.Equal(_user.Name, name);
             Assert.Equal(_user.Kind, kind);
         }
-    }
-
-    public class CustomDataGenerator
-    {
-        public string GetCustomData(User user) => "http://example.com/Users/" + user.Id;
     }
 }
