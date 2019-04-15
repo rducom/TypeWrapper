@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -21,6 +22,7 @@ namespace TypeWrapper
         internal Dictionary<string, DelegateAccessor> AccessorStore { get; } = new Dictionary<string, DelegateAccessor>();
 
         private readonly TypeBuilder _typeBuilder;
+        private Func<Wrapped<T>> _instanceBuilder;
 
         public WrapBuilder()
         {
@@ -85,15 +87,26 @@ namespace TypeWrapper
             return this;
         }
 
+
+        private Wrapped<T> CreateInstance()
+        {
+            if (_instanceBuilder != null)
+            {
+                return _instanceBuilder();
+            }
+            Type wrappedType = _typeBuilder.CreateType(); 
+            _instanceBuilder = Expression.Lambda<Func<Wrapped<T>>>(Expression.Block(wrappedType, Expression.New(wrappedType))).Compile();
+            return _instanceBuilder();
+        }
+
         public Wrapped<T> Instance(T instance)
         {
             if (instance == null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }
-
-            var wrappedType = _typeBuilder.CreateType();
-            var wrapped = (Wrapped<T>)Activator.CreateInstance(wrappedType);
+            
+            var wrapped = CreateInstance();
             wrapped.InternalItem = instance;
             wrapped.InternalWrapBuilder = this;
             return wrapped;
