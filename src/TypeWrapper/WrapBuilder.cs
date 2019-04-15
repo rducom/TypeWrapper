@@ -101,13 +101,8 @@ namespace TypeWrapper
 
         public Wrapped<T> Instance(T instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-            
             var wrapped = CreateInstance();
-            wrapped.InternalItem = instance;
+            wrapped.InternalItem = instance ?? throw new ArgumentNullException(nameof(instance));
             wrapped.InternalWrapBuilder = this;
             return wrapped;
         }
