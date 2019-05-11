@@ -2,3 +2,4 @@
 **/obj/*
 **/bin/*
 *.user
+/benchmark/TypeWrapper.Benchmark/BenchmarkDotNet.Artifacts

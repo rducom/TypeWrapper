@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Newtonsoft.Json;
+using System.Reflection;
 
 namespace TypeWrapper
 {
@@ -8,6 +9,7 @@ namespace TypeWrapper
         protected internal TProperty GetInternalPropertyValue<TProperty>(string propertyName) 
             => (TProperty)InternalWrapBuilder.AccessorStore[propertyName].GetValue(InternalItem);
 
+        [JsonIgnore]
         public T InternalItem { get; internal set; }
         internal WrapBuilder<T> InternalWrapBuilder { get; set; }
     }
