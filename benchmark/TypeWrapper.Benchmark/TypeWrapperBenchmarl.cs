@@ -9,6 +9,7 @@ namespace TypeWrapper.Benchmark
 {
     [CoreJob]
     [MemoryDiagnoser]
+    [MarkdownExporterAttribute.GitHub]
     public class TypeWrapperBenchmark
     {
         private List<RootInstance> _instances;
