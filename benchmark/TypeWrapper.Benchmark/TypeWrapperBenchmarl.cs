@@ -41,18 +41,32 @@ namespace TypeWrapper.Benchmark
         [Params(10, 10000)]
         public int N;
 
-        [Benchmark(Baseline = true)]
-        public string SerializeNative()
+        [Benchmark]
+        public string SerializeNewtonsoft()
         {
             var data = _instances.AsEnumerable();
             return JsonConvert.SerializeObject(data);
         }
 
+        [Benchmark(Baseline = true)]
+        public string SerializeNative()
+        {
+            var data = _instances.AsEnumerable();
+            return System.Text.Json.Serialization.JsonSerializer.ToString(data);
+        }
+
         [Benchmark]
-        public string SerializeWrapped()
+        public string SerializeWrappedNewtonsoft()
         {
             var data = _instances.Select(i => _builder.Instance(i));
             return JsonConvert.SerializeObject(data);
+        }
+
+        [Benchmark]
+        public string SerializeWrappedNative()
+        {
+            var data = _instances.Select(i => _builder.Instance(i));
+            return System.Text.Json.Serialization.JsonSerializer.ToString(data);
         }
     }
 }
